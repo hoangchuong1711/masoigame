@@ -105,9 +105,9 @@ int main() {
     }
     rooms[roomID].connections.push_back(&conn);
 })
-.onclose([&](crow::websocket::connection& conn, uint16_t code) {
-    cout << "WebSocket đóng kết nối!" << endl;
-
+.onclose([&](crow::websocket::connection& conn, const std::string& reason, uint16_t code) {
+    cout << "WebSocket đóng kết nối! Lý do: " << reason << ", Mã: " << code << endl;
+    
     lock_guard<mutex> lock(roomMutex);
     string roomID = "room1";  // Cần có cách lấy `roomID` từ `conn`
     if (rooms.find(roomID) != rooms.end()) {
