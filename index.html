@@ -2,19 +2,19 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Ma Sói</title>
-    <script src="script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Sói Online</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/script.js" defer></script>
 </head>
 <body>
-    <h1>Ma Sói - Chia Vai Trò</h1>
-    <label for="playerCount">Nhập số lượng người chơi:</label>
-    <input type="number" id="playerCount" min="1">
+    <h1>Ma Sói Online</h1>
+    <label>Tên của bạn: <input type="text" id="playerName"></label>
+    <label>Phòng: <input type="text" id="roomID"></label>
+    <button onclick="joinGame()">Tham gia</button>
     <button onclick="startGame()">Bắt đầu</button>
-
-    <h2 id="gameStatus"></h2>
-
-    <button id="randomButton" onclick="randomRole()" disabled>Random Người Chơi</button>
-    
-    <ul id="roleList"></ul>  <!-- Danh sách người chơi + vai trò -->
+    <h2>Người chơi trong phòng:</h2>
+    <ul id="playerList"></ul>
 </body>
 </html>

@@ -1,42 +1,30 @@
-let roles = [];
-let currentPlayer = 0;
+console.log("Script đã chạy!");
 
-function startGame() {
-    const playerCount = document.getElementById("playerCount").value;
-    if (playerCount <= 0) {
-        alert("Vui lòng nhập số lượng hợp lệ!");
-        return;
-    }
+function joinGame() {
+    const playerName = document.getElementById("playerName").value;
+    const roomID = document.getElementById("roomID").value;
+    
+    fetch("/join-game", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: playerName, roomID: roomID })
+    });
 
-    fetch(`/assign-roles?count=${playerCount}`)
-        .then(response => response.json())
-        .then(data => {
-            roles = data.roles;
-            currentPlayer = 0;
-            document.getElementById("gameStatus").innerText = `Có ${playerCount} người chơi. Nhấn Random để xem từng người.`;
-            document.getElementById("randomButton").disabled = false;
+    ws = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.host}/ws/${roomID}`);
 
-            const roleList = document.getElementById("roleList");
-            roleList.innerHTML = ""; // Xóa danh sách cũ nếu có
-
-            for (let i = 0; i < playerCount; i++) {
-                const li = document.createElement("li");
-                li.innerText = `Người chơi ${i + 1}: [Chưa tiết lộ]`;
-                roleList.appendChild(li);
-            }
-        })
-        .catch(error => console.error("Lỗi khi lấy vai trò:", error));
+    ws.onmessage = (event) => {
+        console.log("Từ server:", event.data);
+        const li = document.createElement("li");
+        li.textContent = event.data;
+        document.getElementById("playerList").appendChild(li);
+    };
 }
 
-function randomRole() {
-    if (currentPlayer < roles.length) {
-        const roleList = document.getElementById("roleList");
-        roleList.children[currentPlayer].innerText = `Người chơi ${currentPlayer + 1}: ${roles[currentPlayer]}`;
-        currentPlayer++;
-    }
-
-    if (currentPlayer >= roles.length) {
-        document.getElementById("randomButton").disabled = true;
-        document.getElementById("gameStatus").innerText = "Đã tiết lộ tất cả vai trò!";
-    }
+function startGame() {
+    const roomID = document.getElementById("roomID").value;
+    fetch("/start-game", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomID: roomID })
+    });
 }
